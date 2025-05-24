@@ -1,3 +1,5 @@
+<center><img src="./images/icon.png" width="120px" /></center>
+
 # PesterExplorer
 
 A TUI to explore Pester results.
