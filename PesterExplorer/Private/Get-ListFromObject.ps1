@@ -1,11 +1,11 @@
 function Get-ListFromObject {
     [CmdletBinding()]
-    [OutputType([hashtable])]
+    [OutputType([System.Collections.Specialized.OrderedDictionary])]
     param (
         [Parameter(Mandatory = $true)]
         $Object
     )
-    $previousTest = ":up_left_arrow: .."
+    $previousTest = ".." # :up_left_arrow:
     $hash = [ordered]@{
         $previousTest = @()
     }
@@ -41,8 +41,8 @@ function Get-ListFromObject {
         }
         'Test' {
             # This is a test. Return the test name.
-            $name = $_ | Format-PesterObjectName -NoColor
-            $hash[$name] = $_
+            #$name = $_ | Format-PesterObjectName -NoColor
+            #$hash[$name] = $_
         }
         default { Write-Error "Unsupported object type: $($Object.GetType().Name)" }
     }

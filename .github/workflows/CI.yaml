@@ -1,16 +1,10 @@
 name: CI
-on: [push, pull_request]
+on:
+  pull_request:
+  workflow_dispatch:
+permissions:
+  checks: write
+  pull-requests: write
 jobs:
-  test:
-    name: Run Tests
-    runs-on: ${{ matrix.os }}
-    strategy:
-      fail-fast: false
-      matrix:
-        os: [ubuntu-latest, windows-latest, macOS-latest]
-    steps:
-    - uses: actions/checkout@v1
-    - name: Test
-      shell: pwsh
-      run: ./build.ps1 -Task Test -Bootstrap
-
+  ci:
+    uses: HeyItsGilbert/.github/.github/workflows/ModuleCI.yml@main

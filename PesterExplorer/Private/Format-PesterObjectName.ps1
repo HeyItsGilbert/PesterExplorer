@@ -8,33 +8,44 @@ function Format-PesterObjectName {
         [Switch]
         $NoColor
     )
-    $type = $Object.GetType().Name
-    $name = $Object.Name
-    if ($null -eq $name) {
-        $name = $type | Get-SpectreEscapedText
+    process {
+        $type = $Object.GetType().Name
+        $name = $Object.Name
+        if ($null -eq $name) {
+            $name = $type | Get-SpectreEscapedText
+        }
+        if ($null -ne $Object.ExpandedName) {
+            $name = $Object.ExpandedName | Get-SpectreEscapedText
+        }
+        $icon = switch ($Object.Result) {
+            'Passed' {
+                ":check_mark_button:"
+            }
+            'Failed' {
+                ":cross_mark:"
+            }
+            'Skipped' {
+                ":three_o_clock:"
+            }
+            'Inconclusive' {
+                ":exclamation_question_mark:"
+            }
+            default {
+                Write-Verbose "No icon for result: $($Object.Result)"
+            }
+        }
+        $color = switch ($Object.Result) {
+            'Passed' { 'green' }
+            'Failed' { 'red' }
+            'Skipped' { 'yellow' }
+            'Inconclusive' { 'orange' }
+            default { 'white' }
+        }
+        $finalName = if ($NoColor) {
+            $name
+        } else {
+            "[${color}]${icon} $name[/]"
+        }
+        return $finalName
     }
-    if ($null -ne $Object.ExpandedName) {
-        $name = $Object.ExpandedName | Get-SpectreEscapedText
-    }
-    if ($NoColor) {
-        return $name | Get-SpectreEscapedText
-    }
-    $finalName = switch ($Object.Result) {
-        'Passed' {
-            "[green]:check_mark_button: $name[/]"
-        }
-        'Failed' {
-            "[red]:cross_mark: $name[/]"
-        }
-        'Skipped' {
-            "[yellow]:three_o_clock: $name[/]"
-        }
-        'Inconclusive' {
-            "[orange]:exclamation_question_mark: $name[/]"
-        }
-        default {
-            "[white]$name[/]"
-        }
-    }
-    return $finalName
 }

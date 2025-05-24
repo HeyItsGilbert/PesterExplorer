@@ -2,8 +2,9 @@ function Get-ShortcutKeyPanel {
     $shortcutKeys = @(
         "Up, Down - Navigate",
         "Enter - Explore",
-        "Esc - Exit",
+        "Esc - Back",
         "Ctrl+C - Exit"
+        # TODO: Add a key to jump to the test
     )
     $result = $shortcutKeys | Foreach-Object {
         "[grey]$($_)[/]"

@@ -78,6 +78,12 @@
             "label": "Publish",
             "type": "shell",
             "command": "${cwd}/build.ps1 -Task Publish -Verbose"
+        },
+        {
+            "label": "Bootstrap",
+            "type": "shell",
+            "command": "${cwd}/build.ps1 -Task Init -Bootstrap -Verbose",
+            "problemMatcher": []
         }
     ]
 }
