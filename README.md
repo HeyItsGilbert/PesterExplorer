@@ -1,4 +1,4 @@
-<center><img src="./images/icon.png" width="120px" /></center>
+<center><img src="https://raw.githubusercontent.com/HeyItsGilbert/PesterExplorer/main/images/icon.png" width="120px" /></center>
 
 # PesterExplorer
 
