@@ -17,8 +17,7 @@ function Show-PesterResult {
     $pesterResult = Invoke-Pester -Path "path\to\tests.ps1" -PassThru
     Show-PesterResult -PesterResult $pesterResult
 
-    .NOTES
-    This function is part of the PesterExplorer module and requires Spectre.Console to be installed.
+    This example runs Pester tests and opens a TUI to explore the results.
     #>
     [CmdletBinding()]
     [OutputType([void])]
