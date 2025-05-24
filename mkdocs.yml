@@ -3,7 +3,6 @@ site_url: http://heyitsgilbert.github.io/PesterExplorer
 repo_url: http://github.com/HeyItsGilbert/PesterExplorer
 theme:
   name: readthedocs
-  logo: images/icon.png
 nav:
   - Home: "index.md"
   - Changelog: "https://github.com/HeyItsGilbert/PesterExplorer/blob/main/CHANGELOG.md"
