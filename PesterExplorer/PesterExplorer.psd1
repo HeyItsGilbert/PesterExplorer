@@ -54,11 +54,11 @@
     RequiredModules = @(
         @{
             ModuleName = 'Pester'
-            Version = '5.0.0'
+            ModuleVersion = '5.0.0'
         },
         @{
-            ModuleName = 'Spectre.Console'
-            Version = '2.3.0'
+            ModuleName = 'PwshSpectreConsole'
+            ModuleVersion = '2.3.0'
         }
     )
 
@@ -122,7 +122,7 @@
             ProjectUri = 'https://github.com/HeyItsGilbert/PesterExplorer'
 
             # A URL to an icon representing this module.
-            # IconUri = 'https://raw.githubusercontent.com/HeyItsGilbert/PesterExplorer/main/images/icon.png'
+            IconUri = 'https://raw.githubusercontent.com/HeyItsGilbert/PesterExplorer/main/images/icon.png'
 
             # ReleaseNotes of this module
             ReleaseNotes = 'https://github.com/HeyItsGilbert/PesterExplorer/blob/main/CHANGELOG.md'

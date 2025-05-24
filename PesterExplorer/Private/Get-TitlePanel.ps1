@@ -3,7 +3,7 @@ function Get-TitlePanel {
     param(
         $Item
     )
-    # TODO: Add some more info to the title panel.
+    # TODO: Add duration and other information to the title panel.
     $titles = @(
         "Pester Explorer - [gray]$(Get-Date)[/]"
     )
@@ -12,5 +12,7 @@ function Get-TitlePanel {
         # Print what type it is and it's formatted name.
         $titles += "$($Item.GetType().Name): $($objectName)"
     }
-    return $titles | Format-SpectreRows | Format-SpectreAligned -HorizontalAlignment Center -VerticalAlignment Middle | Format-SpectrePanel -Expand
+    return $titles | Format-SpectreRows |
+        Format-SpectreAligned -HorizontalAlignment Center -VerticalAlignment Middle |
+        Format-SpectrePanel -Expand
 }

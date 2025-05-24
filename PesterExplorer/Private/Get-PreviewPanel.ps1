@@ -6,7 +6,9 @@ function Get-PreviewPanel {
         $SelectedItem
     )
     if($SelectedItem -like "*..") {
-        return "[grey]Please select an item.[/]" | Format-SpectreAligned -HorizontalAlignment Center -VerticalAlignment Middle | Format-SpectrePanel -Header "[white]Preview[/]" -Expand
+        return "[grey]Please select an item.[/]" |
+            Format-SpectreAligned -HorizontalAlignment Center -VerticalAlignment Middle |
+            Format-SpectrePanel -Header "[white]Preview[/]" -Expand
     }
     $object = $Items.Item($SelectedItem)
     $result = @()
@@ -16,10 +18,17 @@ function Get-PreviewPanel {
     # For Tests Let's print some more details
     if ($object.GetType().Name -eq "Test") {
         $result += $object.Result | Format-SpectrePanel -Header "Test Result" -Border "Rounded" -Color "White"
+        # Show the code tested
+        $result += $object.ScriptBlock | Get-SpectreEscapedText | Format-SpectrePanel -Header "Test Code" -Border "Rounded" -Color "White"
     } else {
         $data = Format-PesterTreeHash -Object $object
         Write-Debug $($data|ConvertTo-Json -Depth 10)
         $result += Format-SpectreTree -Data $data | Format-SpectrePanel -Title "Results" -Border "Rounded" -Color "White"
+    }
+
+    if($null -ne $object.StandardOutput){
+        $result += $object.StandardOutput | Get-SpectreEscapedText | Format-SpectrePanel -Header "Standard Output" -Border "Ascii" -Color "White"
+
     }
 
     # Print errors if they exist.

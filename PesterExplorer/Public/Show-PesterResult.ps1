@@ -1,7 +1,34 @@
 function Show-PesterResult {
+    <#
+    .SYNOPSIS
+    Open a TUI to explore the Pester result object.
+
+    .DESCRIPTION
+    Show a Pester result in a TUI (Text User Interface) using Spectre.Console.
+    This function builds a layout with a header, a list of items, and a preview panel.
+
+    .PARAMETER PesterResult
+    The Pester result object to display. This should be a Pester Run object.
+
+    .PARAMETER NoShortcutPanel
+    If specified, the shortcut panel will not be displayed at the bottom of the TUI.
+
+    .EXAMPLE
+    $pesterResult = Invoke-Pester -Path "path\to\tests.ps1" -PassThru
+    Show-PesterResult -PesterResult $pesterResult
+
+    .NOTES
+    This function is part of the PesterExplorer module and requires Spectre.Console to be installed.
+    #>
     [CmdletBinding()]
     [OutputType([void])]
+    [Diagnostics.CodeAnalysis.SuppressMessageAttribute(
+        'PSReviewUnusedParameter',
+        'PesterResult',
+        Justification='This is actually used in the script block.'
+    )]
     param (
+        [ValidateNotNullOrEmpty()]
         [Pester.Run]
         $PesterResult,
         [switch]
@@ -38,7 +65,6 @@ function Show-PesterResult {
     $layout = New-SpectreLayout -Name "root" -Rows $rows
 
     # Start live rendering the layout
-    # Type "↓", "↓", "↓" to navigate the file list, and press "Enter" to explore
     Invoke-SpectreLive -Data $layout -ScriptBlock {
         param (
             [Spectre.Console.LiveDisplayContext] $Context
@@ -50,7 +76,8 @@ function Show-PesterResult {
         $list = [array]$items.Keys
         $selectedItem = $list[0]
         $stack = [System.Collections.Stack]::new()
-        $stack.Push($PesterResult)
+        $object = $PesterResult
+        $stack.Push($object)
         #endregion Initial State
 
         while ($true) {
@@ -67,13 +94,13 @@ function Show-PesterResult {
                     if($items.Item($selectedItem).GetType().Name -eq "Test") {
                         # This is a test. We don't want to go deeper.
                     }
-                    if($selectedItem -like '*..') {
+                    if($selectedItem -like '*..*') {
                         # Move up one via selecting ..
                         $object = $stack.Pop()
                         Write-Debug "Popped item from stack: $($object.Name)"
                     } else {
                         Write-Debug "Pushing item into stack: $($items.Item($selectedItem).Name)"
-                        $stack.Push($items.Item($selectedItem))
+                        $stack.Push($object)
                         $object = $items.Item($selectedItem)
                     }
                     $items = Get-ListFromObject -Object $object

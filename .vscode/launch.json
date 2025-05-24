@@ -1,0 +1,32 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "PowerShell: Debug Tests",
+            "type": "PowerShell",
+            "request": "launch",
+            "script": "./build.ps1 -Task Test",
+            "args": [],
+            "createTemporaryIntegratedConsole": false
+        },
+        {
+            "name": "PowerShell: Debug Tests (Temp Console)",
+            "type": "PowerShell",
+            "request": "launch",
+            "script": "./build.ps1 -Task Test",
+            "args": [],
+            "createTemporaryIntegratedConsole": true
+        },
+        {
+            "name": "PowerShell: Load Source Module (Temp Console)",
+            "type": "PowerShell",
+            "request": "launch",
+            "script": "./build.ps1 -Task Init && Import-Module $env:BHPSModuleManifest",
+            "args": [],
+            "createTemporaryIntegratedConsole": true
+        }
+    ]
+}

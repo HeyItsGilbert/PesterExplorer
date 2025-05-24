@@ -31,6 +31,21 @@ PS C:\> {{ Add example code here }}
 
 ## PARAMETERS
 
+### -PesterResult
+{{ Fill PesterResult Description }}
+
+```yaml
+Type: Run
+Parameter Sets: (All)
+Aliases:
+
+Required: False
+Position: 1
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
 ### -NoShortcutPanel
 {{ Fill NoShortcutPanel Description }}
 
@@ -41,21 +56,6 @@ Aliases:
 
 Required: False
 Position: Named
-Default value: None
-Accept pipeline input: False
-Accept wildcard characters: False
-```
-
-### -PesterResult
-{{ Fill PesterResult Description }}
-
-```yaml
-Type: Run
-Parameter Sets: (All)
-Aliases:
-
-Required: False
-Position: 0
 Default value: None
 Accept pipeline input: False
 Accept wildcard characters: False

@@ -23,4 +23,7 @@
     'PSScriptAnalyzer' = @{
         Version = '1.19.1'
     }
+    'PwshSpectreConsole' = @{
+        Version = '2.3.0'
+    }
 }

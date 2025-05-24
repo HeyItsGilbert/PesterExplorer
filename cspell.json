@@ -1,0 +1,13 @@
+{
+    "version": "0.2",
+    "ignorePaths": [],
+    "dictionaryDefinitions": [],
+    "dictionaries": [
+        "powershell"
+    ],
+    "words": [],
+    "ignoreWords": [
+        "pwsh"
+    ],
+    "import": []
+}
