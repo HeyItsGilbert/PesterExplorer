@@ -3,6 +3,10 @@ on:
   push:
     branches:
       - main
+permissions:
+  checks: write
+  pull-requests: write
+  contents: write
 
 jobs:
   build:
