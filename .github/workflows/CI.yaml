@@ -5,6 +5,8 @@ on:
 permissions:
   checks: write
   pull-requests: write
+  contents: read
+  issues: write
 jobs:
   ci:
     uses: HeyItsGilbert/.github/.github/workflows/ModuleCI.yml@main
