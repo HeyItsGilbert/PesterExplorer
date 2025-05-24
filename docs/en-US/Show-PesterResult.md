@@ -8,7 +8,7 @@ schema: 2.0.0
 # Show-PesterResult
 
 ## SYNOPSIS
-{{ Fill in the Synopsis }}
+Open a TUI to explore the Pester result object.
 
 ## SYNTAX
 
@@ -18,21 +18,24 @@ Show-PesterResult [[-PesterResult] <Run>] [-NoShortcutPanel] [-ProgressAction <A
 ```
 
 ## DESCRIPTION
-{{ Fill in the Description }}
+Show a Pester result in a TUI (Text User Interface) using Spectre.Console.
+This function builds a layout with a header, a list of items, and a preview panel.
 
 ## EXAMPLES
 
-### Example 1
-```powershell
-PS C:\> {{ Add example code here }}
+### EXAMPLE 1
+```
+$pesterResult = Invoke-Pester -Path "path\to\tests.ps1" -PassThru
+Show-PesterResult -PesterResult $pesterResult
 ```
 
-{{ Add example description here }}
+This example runs Pester tests and opens a TUI to explore the results.
 
 ## PARAMETERS
 
 ### -PesterResult
-{{ Fill PesterResult Description }}
+The Pester result object to display.
+This should be a Pester Run object.
 
 ```yaml
 Type: Run
@@ -47,7 +50,7 @@ Accept wildcard characters: False
 ```
 
 ### -NoShortcutPanel
-{{ Fill NoShortcutPanel Description }}
+If specified, the shortcut panel will not be displayed at the bottom of the TUI.
 
 ```yaml
 Type: SwitchParameter
@@ -56,7 +59,7 @@ Aliases:
 
 Required: False
 Position: Named
-Default value: None
+Default value: False
 Accept pipeline input: False
 Accept wildcard characters: False
 ```
@@ -81,11 +84,9 @@ This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable
 
 ## INPUTS
 
-### None
-
 ## OUTPUTS
 
-### System.Object
+### System.Void
 ## NOTES
 
 ## RELATED LINKS

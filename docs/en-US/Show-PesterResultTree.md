@@ -8,7 +8,7 @@ schema: 2.0.0
 # Show-PesterResultTree
 
 ## SYNOPSIS
-{{ Fill in the Synopsis }}
+Show a Pester result in a tree format using Spectre.Console.
 
 ## SYNTAX
 
@@ -17,21 +17,26 @@ Show-PesterResultTree [[-PesterResult] <Run>] [-ProgressAction <ActionPreference
 ```
 
 ## DESCRIPTION
-{{ Fill in the Description }}
+This function takes a Pester result object and formats it into a tree structure
+using Spectre.Console.
+It is useful for visualizing the structure of Pester results
+such as runs, containers, blocks, and tests.
 
 ## EXAMPLES
 
-### Example 1
-```powershell
-PS C:\> {{ Add example code here }}
+### EXAMPLE 1
+```
+$pesterResult = Invoke-Pester -Path "path\to\tests.ps1" -PassThru
+Show-PesterResultTree -PesterResult $pesterResult
 ```
 
-{{ Add example description here }}
+This example runs Pester tests and displays the results in a tree format.
 
 ## PARAMETERS
 
 ### -PesterResult
-{{ Fill PesterResult Description }}
+The Pester result object to display.
+This should be a Pester Run object.
 
 ```yaml
 Type: Run
@@ -65,12 +70,9 @@ This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable
 
 ## INPUTS
 
-### None
-
 ## OUTPUTS
 
 ### System.Void
-
 ## NOTES
 
 ## RELATED LINKS
