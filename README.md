@@ -29,7 +29,7 @@ $pester = Invoke-Pester .\tests\ -PassThru
 Show-PesterResult $p
 ```
 
-![](images\Show-PesterResult.png)
+<center><img src="https://raw.githubusercontent.com/HeyItsGilbert/PesterExplorer/main/images/Show-PesterResult.png" /></center>
 
 You can also get a tree view of your pester results with
 `Show-PesterResultTree`.
@@ -41,7 +41,7 @@ $pester = Invoke-Pester .\tests\ -PassThru
 Show-PesterResultTree $p
 ```
 
-![](images\Show-PesterResultTree.png)
+<center><img src="https://raw.githubusercontent.com/HeyItsGilbert/PesterExplorer/main/images/Show-PesterResultTree.png" /></center>
 
 ## Contributing
 
