@@ -7,7 +7,8 @@
     ],
     "words": [],
     "ignoreWords": [
-        "pwsh"
+        "pwsh",
+        "psake"
     ],
     "import": []
 }
