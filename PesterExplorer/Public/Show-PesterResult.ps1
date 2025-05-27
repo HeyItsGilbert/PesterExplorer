@@ -76,7 +76,6 @@ function Show-PesterResult {
         $selectedItem = $list[0]
         $stack = [System.Collections.Stack]::new()
         $object = $PesterResult
-        #$stack.Push($object)
         #endregion Initial State
 
         while ($true) {
