@@ -76,7 +76,7 @@ function Show-PesterResult {
         $selectedItem = $list[0]
         $stack = [System.Collections.Stack]::new()
         $object = $PesterResult
-        $stack.Push($object)
+        #$stack.Push($object)
         #endregion Initial State
 
         while ($true) {
@@ -90,17 +90,19 @@ function Show-PesterResult {
                     $selectedItem = $list[($list.IndexOf($selectedItem) - 1 + $list.Count) % $list.Count]
                 } elseif ($lastKeyPressed.Key -eq "Enter") {
                     <# Recurse into Pester Object #>
-                    if($items.Item($selectedItem).GetType().Name -eq "Test") {
-                        # This is a test. We don't want to go deeper.
-                    }
                     if($selectedItem -like '*..*') {
                         # Move up one via selecting ..
                         $object = $stack.Pop()
                         Write-Debug "Popped item from stack: $($object.Name)"
                     } else {
                         Write-Debug "Pushing item into stack: $($items.Item($selectedItem).Name)"
+
                         $stack.Push($object)
                         $object = $items.Item($selectedItem)
+                        if($object.GetType().Name -eq "Test") {
+                            # This is a test. We don't want to go deeper.
+                            $object = $stack.Pop()
+                        }
                     }
                     $items = Get-ListFromObject -Object $object
                     $list = [array]$items.Keys
