@@ -5,12 +5,13 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
-## Unreleased
+## [0.2.0] 2025-05-28
 
 ### Added
 
 - Added comment based help on private functions to make it easier for new
   contributors to grok.
+- Added Pester result breakdown to title panel.
 
 ### Changed
 

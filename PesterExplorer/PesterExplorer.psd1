@@ -12,25 +12,25 @@
     RootModule = 'PesterExplorer.psm1'
 
     # Version number of this module.
-    ModuleVersion = '0.1.0'
+    ModuleVersion     = '0.2.0'
 
     # Supported PSEditions
     # CompatiblePSEditions = @()
 
     # ID used to uniquely identify this module
-    GUID = '1b8311c2-23fd-4a4c-90de-e17cfc306b04'
+    GUID              = '1b8311c2-23fd-4a4c-90de-e17cfc306b04'
 
     # Author of this module
-    Author = 'Gilbert Sanchez'
+    Author            = 'Gilbert Sanchez'
 
     # Company or vendor of this module
-    CompanyName = 'HeyItsGilbert'
+    CompanyName       = 'HeyItsGilbert'
 
     # Copyright statement for this module
-    Copyright = '(c) Gilbert Sanchez. All rights reserved.'
+    Copyright         = '(c) Gilbert Sanchez. All rights reserved.'
 
     # Description of the functionality provided by this module
-    Description = 'A TUI to explore Pester results.'
+    Description       = 'A TUI to explore Pester results.'
 
     # Minimum version of the PowerShell engine required by this module
     PowerShellVersion = '7.0'
@@ -51,13 +51,13 @@
     # ProcessorArchitecture = ''
 
     # Modules that must be imported into the global environment prior to importing this module
-    RequiredModules = @(
+    RequiredModules   = @(
         @{
-            ModuleName = 'Pester'
+            ModuleName    = 'Pester'
             ModuleVersion = '5.0.0'
         },
         @{
-            ModuleName = 'PwshSpectreConsole'
+            ModuleName    = 'PwshSpectreConsole'
             ModuleVersion = '2.3.0'
         }
     )
@@ -81,13 +81,13 @@
     FunctionsToExport = '*'
 
     # Cmdlets to export from this module, for best performance, do not use wildcards and do not delete the entry, use an empty array if there are no cmdlets to export.
-    CmdletsToExport = '*'
+    CmdletsToExport   = '*'
 
     # Variables to export from this module
     VariablesToExport = '*'
 
     # Aliases to export from this module, for best performance, do not use wildcards and do not delete the entry, use an empty array if there are no aliases to export.
-    AliasesToExport = '*'
+    AliasesToExport   = '*'
 
     # DSC resources to export from this module
     # DscResourcesToExport = @()
@@ -99,12 +99,12 @@
     # FileList = @()
 
     # Private data to pass to the module specified in RootModule/ModuleToProcess. This may also contain a PSData hashtable with additional module metadata used by PowerShell.
-    PrivateData = @{
+    PrivateData       = @{
 
         PSData = @{
 
             # Tags applied to this module. These help with module discovery in online galleries.
-            Tags = @(
+            Tags                     = @(
                 'Windows',
                 'Linux',
                 'macOS',
@@ -116,13 +116,13 @@
             )
 
             # A URL to the license for this module.
-            LicenseUri = 'https://github.com/HeyItsGilbert/PesterExplorer/blob/main/LICENSE'
+            LicenseUri               = 'https://github.com/HeyItsGilbert/PesterExplorer/blob/main/LICENSE'
 
             # A URL to the main website for this project.
-            ProjectUri = 'https://github.com/HeyItsGilbert/PesterExplorer'
+            ProjectUri               = 'https://github.com/HeyItsGilbert/PesterExplorer'
 
             # A URL to an icon representing this module.
-            IconUri = 'https://raw.githubusercontent.com/HeyItsGilbert/PesterExplorer/main/images/icon.png'
+            IconUri                  = 'http://raw.githubusercontent.com/HeyItsGilbert/PesterExplorer/main/images/icon.png'
 
             # ReleaseNotes of this module
             ReleaseNotes = 'https://github.com/HeyItsGilbert/PesterExplorer/blob/main/CHANGELOG.md'

@@ -32,7 +32,7 @@ function Format-PesterObjectName {
         $NoColor
     )
     process {
-        $type = $Object.GetType().Name
+        $type = $Object.GetType().ToString()
         $name = $Object.Name
         if ($null -eq $name) {
             $name = $type | Get-SpectreEscapedText
