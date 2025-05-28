@@ -121,12 +121,8 @@ function Show-PesterResult {
 
             # Generate new data
             $titlePanel = Get-TitlePanel -Item $object
-            $panelSplat = @{
-                List = $list
-                SelectedItem = $selectedItem
-            }
-            $listPanel = Get-ListPanel @panelSplat
-            $previewPanel = Get-PreviewPanel @panelSplat
+            $listPanel = Get-ListPanel -List $list -SelectedItem $selectedItem
+            $previewPanel = Get-PreviewPanel -Items $items -SelectedItem $selectedItem
 
             # Update layout
             $layout["header"].Update($titlePanel) | Out-Null
