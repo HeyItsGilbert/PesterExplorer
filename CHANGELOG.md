@@ -7,17 +7,23 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## Unreleased
 
+### Added
+
+- Added comment based help on private functions to make it easier for new
+  contributors to grok.
+
 ### Changed
 
 - The `Show-PesterResult` List panel now the files using relative path from the
   current directory. It also added padding on the selected item as well as an
   additional icon to show the highlight.
+- Formatted all the functions to stay under 80 character line limit. This is a
+  preference. We will have a 120 hard limit (when possible).
 
 ### Fixed
 
 - Removed extra item from the stack that tracked which layer of the view you
   were in.
-
 
 ## [0.1.0] Initial Version
 
