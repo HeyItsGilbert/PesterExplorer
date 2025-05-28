@@ -1,4 +1,45 @@
 function Format-PesterTreeHash {
+    <#
+    .SYNOPSIS
+    Format a Pester object into a hashtable for tree display.
+
+    .DESCRIPTION
+    This function takes a Pester object and formats it into a hashtable that can
+    be used to display a tree structure in a TUI (Text User Interface). It
+    handles different types of Pester objects such as Run, Container, Block, and
+    Test, recursively building a tree structure with children nodes.
+
+    .PARAMETER Object
+    The Pester object to format. This can be a Run, Container, Block, or Test
+    object. The function will traverse the object and its children, formatting
+    them into a hashtable structure.
+
+    .EXAMPLE
+    $run = Invoke-Pester -Path 'tests' -PassThru
+    $treeHash = Format-PesterTreeHash -Object $run
+
+    .NOTES
+    This returns a hashtable with the following structure:
+    @{
+        Value = "Pester Run" # or the name of the object
+        Children = @(
+            @{
+                Value = "Container Name"
+                Children = @(
+                    @{
+                        Value = "Block Name"
+                        Children = @(
+                            @{
+                                Value = "Test Name"
+                                Children = @()
+                            }
+                        )
+                    }
+                )
+            }
+        )
+    }
+    #>
     [CmdletBinding()]
     [OutputType([hashtable])]
     param (

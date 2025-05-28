@@ -1,4 +1,5 @@
 function Get-ShortcutKeyPanel {
+    [CmdletBinding()]
     $shortcutKeys = @(
         "Up, Down - Navigate",
         "Enter - Explore",

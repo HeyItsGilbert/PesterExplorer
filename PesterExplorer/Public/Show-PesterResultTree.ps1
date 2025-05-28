@@ -4,9 +4,9 @@ function Show-PesterResultTree {
     Show a Pester result in a tree format using Spectre.Console.
 
     .DESCRIPTION
-    This function takes a Pester result object and formats it into a tree structure
-    using Spectre.Console. It is useful for visualizing the structure of Pester results
-    such as runs, containers, blocks, and tests.
+    This function takes a Pester result object and formats it into a tree
+    structure using Spectre.Console. It is useful for visualizing the structure
+    of Pester results such as runs, containers, blocks, and tests.
 
     .PARAMETER PesterResult
     The Pester result object to display. This should be a Pester Run object.
