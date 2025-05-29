@@ -47,11 +47,30 @@ function Get-PreviewPanel {
     #>
     [CmdletBinding()]
     param (
+        [Parameter(Mandatory)]
+        [ValidateNotNullOrEmpty()]
         [hashtable]
         $Items,
+        [Parameter(Mandatory)]
         [string]
-        $SelectedItem
+        $SelectedItem,
+        [Parameter()]
+        [int]
+        $ScrollPosition = 0,
+        [Parameter()]
+        [ValidateNotNull()]
+        $PreviewHeight,
+        [Parameter()]
+        [ValidateNotNull()]
+        $PreviewWidth,
+        [string]$SelectedPane = "list"
     )
+    $paneColor = if($SelectedPane -ne "preview") {
+        # If the selected pane is not preview, return an empty panel
+        "blue"
+    } else {
+        "white"
+    }
     if($SelectedItem -like "*..") {
         $formatSpectreAlignedSplat = @{
             HorizontalAlignment = 'Center'
@@ -59,10 +78,10 @@ function Get-PreviewPanel {
         }
         return "[grey]Please select an item.[/]" |
             Format-SpectreAligned @formatSpectreAlignedSplat |
-            Format-SpectrePanel -Header "[white]Preview[/]" -Expand
+            Format-SpectrePanel -Header "[white]Preview[/]" -Expand -Color $paneColor
     }
     $object = $Items.Item($SelectedItem)
-    $result = @()
+    $rows = @()
     # SelectedItem can be a few different types:
     # - A Pester object (Run, Container, Block, Test)
 
@@ -134,17 +153,23 @@ function Get-PreviewPanel {
             $errorRecords += $_ |
                 Format-SpectreException -ExceptionFormat ShortenEverything
         }
-        $formatSpectrePanelSplat = @{
-            Header = "Errors"
-            Border = "Rounded"
-            Color = "Red"
-        }
-        $result += $errorRecords |
-            Format-SpectreRows |
-            Format-SpectrePanel @formatSpectrePanelSplat
+        $rows += $errorRecords | Format-SpectreRows | Format-SpectrePanel -Header "Errors" -Border "Rounded" -Color "Red"
     }
 
-    return $result |
-        Format-SpectreGrid |
-        Format-SpectrePanel -Header "[white]Preview[/]" -Expand
+    $formatSpectrePanelSplat = @{
+        Header = "[white]Preview[/]"
+        Width = $PreviewWidth
+        Height = $PreviewHeight
+        Color = $paneColor
+    }
+
+    $formatScrollableSpectrePanelSplat = @{
+        Height = $PreviewHeight
+        Width = $PreviewWidth
+        ScrollPosition = $ScrollPosition
+        PanelSplat = $formatSpectrePanelSplat
+        Data = $($rows | Format-SpectreRows)
+    }
+
+    return $(Format-ScrollableSpectrePanel @formatScrollableSpectrePanelSplat)
 }

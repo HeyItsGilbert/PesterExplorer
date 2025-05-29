@@ -29,8 +29,15 @@ function Get-ListPanel {
         [array]
         $List,
         [string]
-        $SelectedItem
+        $SelectedItem,
+        [string]$SelectedPane = "list"
     )
+    $paneColor = if($SelectedPane -ne "list") {
+        # If the selected pane is not preview, return an empty panel
+        "blue"
+    } else {
+        "white"
+    }
     $unselectedStyle = @{
         RootColor      = [Spectre.Console.Color]::Grey
         SeparatorColor = [Spectre.Console.Color]::Grey
@@ -82,5 +89,5 @@ function Get-ListPanel {
     }
     $results |
         Format-SpectreRows |
-        Format-SpectrePanel -Header "[white]List[/]" -Expand
+        Format-SpectrePanel -Header "[white]List[/]" -Expand $paneColor
 }

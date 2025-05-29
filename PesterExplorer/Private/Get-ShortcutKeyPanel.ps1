@@ -21,10 +21,12 @@ function Get-ShortcutKeyPanel {
     [CmdletBinding()]
     $shortcutKeys = @(
         "Up, Down - Navigate",
+        "Home, End - Jump to Top/Bottom",
+        "PageUp, PageDown - Scroll",
         "Enter - Explore",
+        "Tab - Switch Panel",
         "Esc - Back",
         "Ctrl+C - Exit"
-        # TODO: Add a key to jump to the test
     )
     $formatSpectreAlignedSplat = @{
         HorizontalAlignment = 'Center'

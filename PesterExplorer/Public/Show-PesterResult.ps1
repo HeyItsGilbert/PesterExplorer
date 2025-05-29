@@ -76,53 +76,98 @@ function Show-PesterResult {
         $selectedItem = $list[0]
         $stack = [System.Collections.Stack]::new()
         $object = $PesterResult
+        $selectedPane = 'list'
+        $scrollPosition = 0
         #endregion Initial State
 
         while ($true) {
+            # Check the layout sizes
+            $sizes = $layout | Get-SpectreLayoutSizes
+            $previewHeight = $sizes["preview"].Height
+            $previewWidth = $sizes["preview"].Width
+            Write-Debug "Preview size: $previewWidth x $previewHeight"
+
             # Handle input
             $lastKeyPressed = Get-LastKeyPressed
-            # ToDo: Add support for scrolling the right panel
+            # ToDo: Add vim navigation keys
             if ($null -ne $lastKeyPressed) {
-                if ($lastKeyPressed.Key -eq "DownArrow") {
-                    $selectedItem = $list[($list.IndexOf($selectedItem) + 1) % $list.Count]
-                } elseif ($lastKeyPressed.Key -eq "UpArrow") {
-                    $selectedItem = $list[($list.IndexOf($selectedItem) - 1 + $list.Count) % $list.Count]
-                } elseif ($lastKeyPressed.Key -eq "Enter") {
-                    <# Recurse into Pester Object #>
-                    if($selectedItem -like '*..*') {
-                        # Move up one via selecting ..
-                        $object = $stack.Pop()
-                        Write-Debug "Popped item from stack: $($object.Name)"
-                    } else {
-                        Write-Debug "Pushing item into stack: $($items.Item($selectedItem).Name)"
-
-                        $stack.Push($object)
-                        $object = $items.Item($selectedItem)
-                        if($object.GetType().Name -eq "Test") {
+                #region List Navigation
+                if($selectedPane -eq 'list') {
+                    if ($lastKeyPressed.Key -eq "DownArrow") {
+                        $selectedItem = $list[($list.IndexOf($selectedItem) + 1) % $list.Count]
+                    } elseif ($lastKeyPressed.Key -eq "UpArrow") {
+                        $selectedItem = $list[($list.IndexOf($selectedItem) - 1 + $list.Count) % $list.Count]
+                    } elseif ($lastKeyPressed.Key -eq "PageDown") {
+                        $currentIndex = $list.IndexOf($selectedItem)
+                        $newIndex = [Math]::Min($currentIndex + 10, $list.Count - 1)
+                        $selectedItem = $list[$newIndex]
+                    } elseif ($lastKeyPressed.Key -eq "PageUp") {
+                        $currentIndex = $list.IndexOf($selectedItem)
+                        $newIndex = [Math]::Max($currentIndex - 10, $list.Count - 1)
+                        $selectedItem = $list[$newIndex]
+                    } elseif ($lastKeyPressed.Key -eq "Home") {
+                        $selectedItem = $list[0]
+                    } elseif ($lastKeyPressed.Key -eq "End") {
+                        $selectedItem = $list[-1]
+                    } elseif ($lastKeyPressed.Key -in @("Tab", "RightArrow")) {
+                        $selectedPane = 'preview'
+                    } elseif ($lastKeyPressed.Key -eq "Enter") {
+                        <# Recurse into Pester Object #>
+                        if($items.Item($selectedItem).GetType().Name -eq "Test") {
                             # This is a test. We don't want to go deeper.
-                            $object = $stack.Pop()
                         }
+                        if($selectedItem -like '*..*') {
+                            # Move up one via selecting ..
+                            $object = $stack.Pop()
+                            Write-Debug "Popped item from stack: $($object.Name)"
+                        } else {
+                            Write-Debug "Pushing item into stack: $($items.Item($selectedItem).Name)"
+                            $stack.Push($object)
+                            $object = $items.Item($selectedItem)
+                        }
+                        $items = Get-ListFromObject -Object $object
+                        $list = [array]$items.Keys
+                        $selectedItem = $list[0]
+                        $scrollPosition = 0
+                    } elseif ($lastKeyPressed.Key -eq "Escape") {
+                        # Move up via Esc key
+                        if($stack.Count -eq 0) {
+                            # This is the top level. Exit the loop.
+                            return
+                        }
+                        $object = $stack.Pop()
+                        $items = Get-ListFromObject -Object $object
+                        $list = [array]$items.Keys
+                        $selectedItem = $list[0]
+                        $scrollPosition = 0
                     }
-                    $items = Get-ListFromObject -Object $object
-                    $list = [array]$items.Keys
-                    $selectedItem = $list[0]
-                } elseif ($lastKeyPressed.Key -eq "Escape") {
-                    # Move up via Esc key
-                    if($stack.Count -eq 0) {
-                        # This is the top level. Exit the loop.
-                        return
+                }
+                else {
+                    #region Preview Navigation
+                    # ToDo: Add support for scrolling the right panel
+                    if ($lastKeyPressed.Key -in "Escape", "Tab", "LeftArrow", "RightArrow") {
+                        $selectedPane = 'list'
+                    } elseif ($lastKeyPressed.Key -eq "Down") {
+                        # Scroll down in the preview panel
+                        $scrollPosition = $ScrollPosition + 1
+                    } elseif ($lastKeyPressed.Key -eq "Up") {
+                        # Scroll up in the preview panel
+                        $scrollPosition = $ScrollPosition - 1
+                    } elseif ($lastKeyPressed.Key -eq "PageDown") {
+                        # Scroll down by a page in the preview panel
+                        $scrollPosition = $ScrollPosition + 10
+                    } elseif ($lastKeyPressed.Key -eq "PageUp") {
+                        # Scroll up by a page in the preview panel
+                        $scrollPosition = $ScrollPosition - 10
                     }
-                    $object = $stack.Pop()
-                    $items = Get-ListFromObject -Object $object
-                    $list = [array]$items.Keys
-                    $selectedItem = $list[0]
+                    #endregion Preview Navigation
                 }
             }
 
             # Generate new data
             $titlePanel = Get-TitlePanel -Item $object
-            $listPanel = Get-ListPanel -List $list -SelectedItem $selectedItem
-            $previewPanel = Get-PreviewPanel -Items $items -SelectedItem $selectedItem
+            $listPanel = Get-ListPanel -List $list -SelectedItem $selectedItem -SelectedPane $selectedPane
+            $previewPanel = Get-PreviewPanel -Items $items -SelectedItem $selectedItem -ScrollPosition $scrollPosition -PreviewHeight $previewHeight -PreviewWidth $previewWidth -SelectedPane $selectedPane
 
             # Update layout
             $layout["header"].Update($titlePanel) | Out-Null
