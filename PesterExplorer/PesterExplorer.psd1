@@ -122,7 +122,7 @@
             ProjectUri               = 'https://github.com/HeyItsGilbert/PesterExplorer'
 
             # A URL to an icon representing this module.
-            IconUri                  = 'http://raw.githubusercontent.com/HeyItsGilbert/PesterExplorer/main/images/icon.png'
+            IconUri                  = 'https://raw.githubusercontent.com/HeyItsGilbert/PesterExplorer/main/images/icon.png'
 
             # ReleaseNotes of this module
             ReleaseNotes = 'https://github.com/HeyItsGilbert/PesterExplorer/blob/main/CHANGELOG.md'
