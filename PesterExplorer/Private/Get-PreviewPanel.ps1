@@ -66,6 +66,25 @@ function Get-PreviewPanel {
     # SelectedItem can be a few different types:
     # - A Pester object (Run, Container, Block, Test)
 
+    #region Breakdown
+    # Skip if the object is null or they are all zero.
+    if (
+        (
+            $object.PassedCount +
+            $object.InconclusiveCount +
+            $object.SkippedCount +
+            $object.FailedCount
+        ) -gt 0
+    ) {
+        $data = @()
+        $data += New-SpectreChartItem -Label "Passed" -Value ($object.PassedCount) -Color "Green"
+        $data += New-SpectreChartItem -Label "Failed" -Value ($object.FailedCount) -Color "Red"
+        $data += New-SpectreChartItem -Label "Inconclusive" -Value ($object.InconclusiveCount) -Color "Grey"
+        $data += New-SpectreChartItem -Label "Skipped" -Value ($object.SkippedCount) -Color "Yellow"
+        $result += Format-SpectreBreakdownChart -Data $data
+    }
+    #endregion Breakdown
+
     # For Tests Let's print some more details
     if ($object.GetType().Name -eq "Test") {
         $formatSpectrePanelSplat = @{

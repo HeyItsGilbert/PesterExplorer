@@ -35,14 +35,6 @@ function Get-TitlePanel {
         $title += " | $($Item.GetType().Name): $($objectName)"
     }
     $rows += $title
-    #region Breakdown
-    $data = @()
-    $data += New-SpectreChartItem -Label "Passed" -Value ($Item.PassedCount) -Color "Green"
-    $data += New-SpectreChartItem -Label "Inconclusive" -Value ($Item.InconclusiveCount) -Color "Grey"
-    $data += New-SpectreChartItem -Label "Skipped" -Value ($Item.SkippedCount) -Color "Yellow"
-    $data += New-SpectreChartItem -Label "Failed" -Value ($Item.FailedCount) -Color "Red"
-    $rows += Format-SpectreBreakdownChart -Data $data -ShowPercentage
-    #endregion Breakdown
 
     return $rows | Format-SpectreRows |
         Format-SpectreAligned -HorizontalAlignment Center -VerticalAlignment Middle |
