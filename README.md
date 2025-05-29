@@ -1,8 +1,10 @@
-<center><img src="https://raw.githubusercontent.com/HeyItsGilbert/PesterExplorer/main/images/icon.png" width="120px" /></center>
+<center><img src="https://raw.githubusercontent.com/HeyItsGilbert/PesterExplorer/main/images/icon.png" /></center>
 
 # PesterExplorer
 
 A TUI to explore Pester results.
+
+![PowerShell Gallery](https://img.shields.io/powershellgallery/dt/PesterExplorer) ![PowerShell Gallery Version](https://img.shields.io/powershellgallery/v/PesterExplorer) ![GitHub Workflow Status](https://img.shields.io/github/actions/workflow/status/HeyItsGilbert/PesterExplorer/CI.yaml) ![PowerShell Gallery](https://img.shields.io/powershellgallery/p/PesterExplorer)
 
 ## Overview
 
@@ -10,6 +12,9 @@ Pester does a wonderful job printing out tests results as they're running. The
 difficulty can be where you're looking at a large number of results.
 
 ## Installation
+
+> [!IMPORTANT]
+> This module is for PowerShell 7. This won't work in Windows PowerShell.
 
 ```pwsh
 Install-Module PesterExplorer -Scope CurrentUser
