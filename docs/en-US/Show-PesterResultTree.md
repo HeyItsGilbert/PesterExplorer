@@ -17,10 +17,10 @@ Show-PesterResultTree [[-PesterResult] <Run>] [-ProgressAction <ActionPreference
 ```
 
 ## DESCRIPTION
-This function takes a Pester result object and formats it into a tree structure
-using Spectre.Console.
-It is useful for visualizing the structure of Pester results
-such as runs, containers, blocks, and tests.
+This function takes a Pester result object and formats it into a tree
+structure using Spectre.Console.
+It is useful for visualizing the structure
+of Pester results such as runs, containers, blocks, and tests.
 
 ## EXAMPLES
 

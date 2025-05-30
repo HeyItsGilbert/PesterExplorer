@@ -1,3 +1,4 @@
+# spell-checker:ignore Renderable
 function Get-PreviewPanel {
     <#
     .SYNOPSIS
@@ -193,7 +194,7 @@ function Get-PreviewPanel {
         Write-Debug "Reducing Preview List: $($results.Count), ScrollPosition: $scrollPosition"
 
         # Determine the height of each item in the results
-        $totalHeight = 0
+        $totalHeight = 3
         $reducedList = @()
         if($ScrollPosition -ne 0) {
             # If the scroll position is not zero, add a "back" item
@@ -203,9 +204,17 @@ function Get-PreviewPanel {
             $itemHeight = Get-SpectreRenderableSize $results[$i]
             $totalHeight += $itemHeight.Height
             if ($totalHeight -gt $PreviewHeight) {
+                if($i -eq $scrollPosition) {
+                    # If the first item already exceeds the height, stop here
+                    Write-Debug "First item exceeds preview height. Stopping."
+                    $reducedList += ":police_car_light:The next item is too large to display! Please resize your terminal.:police_car_light:" |
+                        Format-SpectreAligned -HorizontalAlignment Center -VerticalAlignment Middle |
+                        Format-SpectrePanel -Header ":police_car_light: [red]Warning[/]" -Color 'red' -Border Double
+                    break
+                }
                 # If the total height exceeds the preview height, stop adding items
                 Write-Debug "Total height exceeded preview height. Stopping at item $i."
-                $reducedList += "[blue]...more. Switch to Panel and scroll with keys.[/]"
+                $reducedList += "[blue]...more.[/] [grey]Switch to Panel and scroll with keys.[/]"
                 break
             }
             $reducedList += $results[$i]
