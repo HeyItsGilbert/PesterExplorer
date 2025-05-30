@@ -5,6 +5,17 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [0.3.1] 2025-05-30
+
+### Added
+
+- Add VIM (i.e. `hjkl`) navigation support.
+
+### Fixed
+
+- Add parameter validation and mandatory to ensure commands don't fail
+  unexpectedly.
+
 ## [0.3.0] 2025-05-29
 
 ### Added

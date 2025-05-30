@@ -27,6 +27,7 @@ function Show-PesterResult {
         Justification='This is actually used in the script block.'
     )]
     param (
+        [Parameter(Mandatory = $true)]
         [ValidateNotNullOrEmpty()]
         [Pester.Run]
         $PesterResult,
@@ -89,14 +90,13 @@ function Show-PesterResult {
 
             # Handle input
             $lastKeyPressed = Get-LastKeyPressed
-            # ToDo: Add vim navigation keys
             if ($null -ne $lastKeyPressed) {
                 #region List Navigation
                 if($selectedPane -eq 'list') {
-                    if ($lastKeyPressed.Key -eq "DownArrow") {
+                    if ($lastKeyPressed.Key -in @("j", "DownArrow")) {
                         $selectedItem = $list[($list.IndexOf($selectedItem) + 1) % $list.Count]
                         $scrollPosition = 0
-                    } elseif ($lastKeyPressed.Key -eq "UpArrow") {
+                    } elseif ($lastKeyPressed.Key -in @("k", "UpArrow")) {
                         $selectedItem = $list[($list.IndexOf($selectedItem) - 1 + $list.Count) % $list.Count]
                         $scrollPosition = 0
                     } elseif ($lastKeyPressed.Key -eq "PageDown") {
@@ -115,7 +115,7 @@ function Show-PesterResult {
                     } elseif ($lastKeyPressed.Key -eq "End") {
                         $selectedItem = $list[-1]
                         $scrollPosition = 0
-                    } elseif ($lastKeyPressed.Key -in @("Tab", "RightArrow")) {
+                    } elseif ($lastKeyPressed.Key -in @("Tab", "RightArrow", "l")) {
                         $selectedPane = 'preview'
                     } elseif ($lastKeyPressed.Key -eq "Enter") {
                         <# Recurse into Pester Object #>
@@ -150,8 +150,7 @@ function Show-PesterResult {
                 }
                 else {
                     #region Preview Navigation
-                    # ToDo: Add support for scrolling the right panel
-                    if ($lastKeyPressed.Key -in "Escape", "Tab", "LeftArrow", "RightArrow") {
+                    if ($lastKeyPressed.Key -in "Escape", "Tab", "LeftArrow", "h") {
                         $selectedPane = 'list'
                     } elseif ($lastKeyPressed.Key -eq "Down") {
                         # Scroll down in the preview panel
@@ -172,8 +171,22 @@ function Show-PesterResult {
 
             # Generate new data
             $titlePanel = Get-TitlePanel -Item $object
-            $listPanel = Get-ListPanel -List $list -SelectedItem $selectedItem -SelectedPane $selectedPane
-            $previewPanel = Get-PreviewPanel -Items $items -SelectedItem $selectedItem -ScrollPosition $scrollPosition -PreviewHeight $previewHeight -PreviewWidth $previewWidth -SelectedPane $selectedPane
+            $getListPanelSplat = @{
+                List = $list
+                SelectedItem = $selectedItem
+                SelectedPane = $selectedPane
+            }
+            $listPanel = Get-ListPanel @getListPanelSplat
+
+            $getPreviewPanelSplat = @{
+                Items = $items
+                SelectedItem = $selectedItem
+                ScrollPosition = $scrollPosition
+                PreviewHeight = $previewHeight
+                PreviewWidth = $previewWidth
+                SelectedPane = $selectedPane
+            }
+            $previewPanel = Get-PreviewPanel @getPreviewPanelSplat
 
             # Update layout
             $layout["header"].Update($titlePanel) | Out-Null
