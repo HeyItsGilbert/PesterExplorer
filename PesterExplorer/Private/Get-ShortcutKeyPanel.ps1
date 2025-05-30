@@ -20,11 +20,11 @@ function Get-ShortcutKeyPanel {
     #>
     [CmdletBinding()]
     $shortcutKeys = @(
-        "Up, Down - Navigate",
+        "Up/J, Down/K - Navigate",
         "Home, End - Jump to Top/Bottom",
         "PageUp, PageDown - Scroll",
-        "Enter - Explore",
-        "Tab - Switch Panel",
+        "Enter - Explore Item",
+        "Tab, Left/H, Right/L - Switch Panel",
         "Esc - Back",
         "Ctrl+C - Exit"
     )

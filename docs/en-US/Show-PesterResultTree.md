@@ -13,7 +13,7 @@ Show a Pester result in a tree format using Spectre.Console.
 ## SYNTAX
 
 ```
-Show-PesterResultTree [[-PesterResult] <Run>] [-ProgressAction <ActionPreference>] [<CommonParameters>]
+Show-PesterResultTree [-PesterResult] <Run> [-ProgressAction <ActionPreference>] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -43,7 +43,7 @@ Type: Run
 Parameter Sets: (All)
 Aliases:
 
-Required: False
+Required: True
 Position: 1
 Default value: None
 Accept pipeline input: False

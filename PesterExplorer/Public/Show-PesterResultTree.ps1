@@ -20,6 +20,8 @@ function Show-PesterResultTree {
     [CmdletBinding()]
     [OutputType([void])]
     param (
+        [Parameter(Mandatory = $true)]
+        [ValidateNotNullOrEmpty()]
         [Pester.Run]
         $PesterResult
     )

@@ -13,7 +13,7 @@ Open a TUI to explore the Pester result object.
 ## SYNTAX
 
 ```
-Show-PesterResult [[-PesterResult] <Run>] [-NoShortcutPanel] [-ProgressAction <ActionPreference>]
+Show-PesterResult [-PesterResult] <Run> [-NoShortcutPanel] [-ProgressAction <ActionPreference>]
  [<CommonParameters>]
 ```
 
@@ -42,7 +42,7 @@ Type: Run
 Parameter Sets: (All)
 Aliases:
 
-Required: False
+Required: True
 Position: 1
 Default value: None
 Accept pipeline input: False
