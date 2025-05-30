@@ -5,7 +5,18 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
-## Unreleased
+## [0.3.0] 2025-05-29
+
+### Added
+
+- Added the ability to scroll the preview pane on the right.
+  - A "... more" line will show if you need to scroll.
+  - This will give a warning if a panel can't completely rendered.
+  - There is a known issue that you can "scroll past" the last item, but the
+    last item will still render. You will need to scroll back up an equivalent
+    number of times. This will be future Gilbert's problem.
+
+### Changed
 
 - Move test result breakdown chart to Preview pane.
 
