@@ -54,8 +54,6 @@ function Get-PreviewPanel {
         [Parameter(Mandatory)]
         [string]
         $SelectedItem,
-        [Parameter()]
-        [int]
         $ScrollPosition = 0,
         [Parameter()]
         [ValidateNotNull()]
@@ -65,6 +63,7 @@ function Get-PreviewPanel {
         $PreviewWidth,
         [string]$SelectedPane = "list"
     )
+    Write-Debug "Get-PreviewPanel called with SelectedItem: $SelectedItem, ScrollPosition: $ScrollPosition"
     $paneColor = if($SelectedPane -ne "preview") {
         # If the selected pane is not preview, return an empty panel
         "blue"
@@ -81,37 +80,43 @@ function Get-PreviewPanel {
             Format-SpectrePanel -Header "[white]Preview[/]" -Expand -Color $paneColor
     }
     $object = $Items.Item($SelectedItem)
-    $rows = @()
+    $results = @()
     # SelectedItem can be a few different types:
     # - A Pester object (Run, Container, Block, Test)
 
     #region Breakdown
     # Skip if the object is null or they are all zero.
     if (
+        $null -ne $object.PassedCount -and
+        $null -ne $object.InconclusiveCount -and
+        $null -ne $object.SkippedCount -and
+        $null -ne $object.FailedCount -and
         (
-            $object.PassedCount +
-            $object.InconclusiveCount +
-            $object.SkippedCount +
-            $object.FailedCount
+            [int]$object.PassedCount +
+            [int]$object.InconclusiveCount +
+            [int]$object.SkippedCount +
+            [int]$object.FailedCount
         ) -gt 0
     ) {
+        Write-Debug "Adding breakdown chart for $($object.Name)"
         $data = @()
         $data += New-SpectreChartItem -Label "Passed" -Value ($object.PassedCount) -Color "Green"
         $data += New-SpectreChartItem -Label "Failed" -Value ($object.FailedCount) -Color "Red"
         $data += New-SpectreChartItem -Label "Inconclusive" -Value ($object.InconclusiveCount) -Color "Grey"
         $data += New-SpectreChartItem -Label "Skipped" -Value ($object.SkippedCount) -Color "Yellow"
-        $result += Format-SpectreBreakdownChart -Data $data
+        $results += Format-SpectreBreakdownChart -Data $data
     }
     #endregion Breakdown
 
     # For Tests Let's print some more details
     if ($object.GetType().Name -eq "Test") {
+        Write-Debug "Selected item is a Test: $($object.Name)"
         $formatSpectrePanelSplat = @{
             Header = "Test Result"
             Border = "Rounded"
             Color = "White"
         }
-        $result += $object.Result |
+        $results += $object.Result |
             Format-SpectrePanel @formatSpectrePanelSplat
         # Show the code tested
         $formatSpectrePanelSplat = @{
@@ -119,10 +124,11 @@ function Get-PreviewPanel {
             Border = "Rounded"
             Color = "White"
         }
-        $result += $object.ScriptBlock |
+        $results += $object.ScriptBlock |
             Get-SpectreEscapedText |
             Format-SpectrePanel @formatSpectrePanelSplat
     } else {
+        Write-Debug "Selected item is a Pester object: $($object.Name)"
         $data = Format-PesterTreeHash -Object $object
         Write-Debug $($data|ConvertTo-Json -Depth 10)
         $formatSpectrePanelSplat = @{
@@ -130,17 +136,18 @@ function Get-PreviewPanel {
             Border = "Rounded"
             Color = "White"
         }
-        $result += Format-SpectreTree -Data $data |
+        $results += Format-SpectreTree -Data $data |
             Format-SpectrePanel @formatSpectrePanelSplat
     }
 
     if($null -ne $object.StandardOutput){
+        Write-Debug "Adding standard output for $($object.Name)"
         $formatSpectrePanelSplat = @{
             Header = "Standard Output"
             Border = "Ascii"
             Color = "White"
         }
-        $result += $object.StandardOutput |
+        $results += $object.StandardOutput |
             Get-SpectreEscapedText |
             Format-SpectrePanel @formatSpectrePanelSplat
 
@@ -148,28 +155,64 @@ function Get-PreviewPanel {
 
     # Print errors if they exist.
     if($object.ErrorRecord.Count -gt 0) {
+        Write-Debug "Adding error records for $($object.Name)"
         $errorRecords = @()
         $object.ErrorRecord | ForEach-Object {
             $errorRecords += $_ |
                 Format-SpectreException -ExceptionFormat ShortenEverything
         }
-        $rows += $errorRecords | Format-SpectreRows | Format-SpectrePanel -Header "Errors" -Border "Rounded" -Color "Red"
+        $results += $errorRecords | Format-SpectreRows | Format-SpectrePanel -Header "Errors" -Border "Rounded" -Color "Red"
     }
 
     $formatSpectrePanelSplat = @{
         Header = "[white]Preview[/]"
-        Width = $PreviewWidth
-        Height = $PreviewHeight
         Color = $paneColor
-    }
-
-    $formatScrollableSpectrePanelSplat = @{
         Height = $PreviewHeight
         Width = $PreviewWidth
-        ScrollPosition = $ScrollPosition
-        PanelSplat = $formatSpectrePanelSplat
-        Data = $($rows | Format-SpectreRows)
+        Expand = $true
     }
 
-    return $(Format-ScrollableSpectrePanel @formatScrollableSpectrePanelSplat)
+    if($scrollPosition -ge $results.Count) {
+        # If the scroll position is greater than the number of items,
+        # reset it to the last item
+        Write-Debug "Resetting ScrollPosition to last item."
+        $scrollPosition = $results.Count - 1
+    }
+    # If the scroll position is out of bounds, reset it
+    if ($scrollPosition -lt 0) {
+        Write-Debug "Resetting ScrollPosition to 0."
+        $scrollPosition = 0
+    }
+
+    if($results.Count -eq 0) {
+        # If there are no results, return an empty panel
+        return "[grey]No results to display.[/]" |
+            Format-SpectreAligned -HorizontalAlignment Center -VerticalAlignment Middle |
+            Format-SpectrePanel @formatSpectrePanelSplat
+    } else {
+        Write-Debug "Reducing Preview List: $($results.Count), ScrollPosition: $scrollPosition"
+
+        # Determine the height of each item in the results
+        $totalHeight = 0
+        $reducedList = @()
+        if($ScrollPosition -ne 0) {
+            # If the scroll position is not zero, add a "back" item
+            $reducedList += "[grey]...[/]"
+        }
+        for ($i = $scrollPosition; $i -le $array.Count; $i++) {
+            $itemHeight = Get-SpectreRenderableSize $results[$i]
+            $totalHeight += $itemHeight.Height
+            if ($totalHeight -gt $PreviewHeight) {
+                # If the total height exceeds the preview height, stop adding items
+                Write-Debug "Total height exceeded preview height. Stopping at item $i."
+                $reducedList += "[blue]...more. Switch to Panel and scroll with keys.[/]"
+                break
+            }
+            $reducedList += $results[$i]
+        }
+    }
+
+    return $reducedList | Format-SpectreRows |
+        Format-SpectrePanel @formatSpectrePanelSplat
+        #Format-ScrollableSpectrePanel @formatScrollableSpectrePanelSplat
 }

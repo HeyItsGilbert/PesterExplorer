@@ -95,20 +95,26 @@ function Show-PesterResult {
                 if($selectedPane -eq 'list') {
                     if ($lastKeyPressed.Key -eq "DownArrow") {
                         $selectedItem = $list[($list.IndexOf($selectedItem) + 1) % $list.Count]
+                        $scrollPosition = 0
                     } elseif ($lastKeyPressed.Key -eq "UpArrow") {
                         $selectedItem = $list[($list.IndexOf($selectedItem) - 1 + $list.Count) % $list.Count]
+                        $scrollPosition = 0
                     } elseif ($lastKeyPressed.Key -eq "PageDown") {
                         $currentIndex = $list.IndexOf($selectedItem)
                         $newIndex = [Math]::Min($currentIndex + 10, $list.Count - 1)
                         $selectedItem = $list[$newIndex]
+                        $scrollPosition = 0
                     } elseif ($lastKeyPressed.Key -eq "PageUp") {
                         $currentIndex = $list.IndexOf($selectedItem)
                         $newIndex = [Math]::Max($currentIndex - 10, $list.Count - 1)
                         $selectedItem = $list[$newIndex]
+                        $scrollPosition = 0
                     } elseif ($lastKeyPressed.Key -eq "Home") {
                         $selectedItem = $list[0]
+                        $scrollPosition = 0
                     } elseif ($lastKeyPressed.Key -eq "End") {
                         $selectedItem = $list[-1]
+                        $scrollPosition = 0
                     } elseif ($lastKeyPressed.Key -in @("Tab", "RightArrow")) {
                         $selectedPane = 'preview'
                     } elseif ($lastKeyPressed.Key -eq "Enter") {
@@ -155,10 +161,10 @@ function Show-PesterResult {
                         $scrollPosition = $ScrollPosition - 1
                     } elseif ($lastKeyPressed.Key -eq "PageDown") {
                         # Scroll down by a page in the preview panel
-                        $scrollPosition = $ScrollPosition + 10
+                        $scrollPosition = $ScrollPosition + 1
                     } elseif ($lastKeyPressed.Key -eq "PageUp") {
                         # Scroll up by a page in the preview panel
-                        $scrollPosition = $ScrollPosition - 10
+                        $scrollPosition = $ScrollPosition - 1
                     }
                     #endregion Preview Navigation
                 }

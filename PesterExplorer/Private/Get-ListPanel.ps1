@@ -89,5 +89,5 @@ function Get-ListPanel {
     }
     $results |
         Format-SpectreRows |
-        Format-SpectrePanel -Header "[white]List[/]" -Expand $paneColor
+        Format-SpectrePanel -Header "[white]List[/]" -Expand -Color $paneColor
 }
