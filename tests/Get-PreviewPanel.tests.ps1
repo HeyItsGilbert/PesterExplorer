@@ -14,7 +14,7 @@ Describe 'Get-PreviewPanel' {
 
         InModuleScope $env:BHProjectName {
             $script:ContainerWidth = 80
-            $script:ContainerHeight = 100
+            $script:ContainerHeight = 200
             $size = [Spectre.Console.Size]::new($containerWidth, $containerHeight)
             $script:renderOptions = [Spectre.Console.Rendering.RenderOptions]::new(
                 [Spectre.Console.AnsiConsole]::Console.Profile.Capabilities,
@@ -77,7 +77,8 @@ Describe 'Get-PreviewPanel' {
     It 'should print warning when the screen is too small' {
         InModuleScope $env:BHProjectName {
             $Items = Get-ListFromObject -Object $script:run.Containers[0].Blocks[0].Order[0]
-            $size = [Spectre.Console.Size]::new(80, 10)
+            $height = 5
+            $size = [Spectre.Console.Size]::new(80, $height)
             $renderOptions = [Spectre.Console.Rendering.RenderOptions]::new(
                 [Spectre.Console.AnsiConsole]::Console.Profile.Capabilities,
                 $size
@@ -85,7 +86,8 @@ Describe 'Get-PreviewPanel' {
             $getPreviewPanelSplat = @{
                 Items = $Items
                 SelectedItem = 'Test1'
-                PreviewHeight = 5
+                ScrollPosition = 1
+                PreviewHeight = $height
                 PreviewWidth = $script:ContainerWidth
             }
             $panel = Get-PreviewPanel @getPreviewPanelSplat
@@ -100,14 +102,12 @@ Describe 'Get-PreviewPanel' {
             $getPreviewPanelSplat = @{
                 Items = $Items
                 SelectedItem = 'Test1'
-                PreviewHeight = 100
-                PreviewWidth = 100
+                PreviewHeight = $script:ContainerHeight
+                PreviewWidth = $script:ContainerWidth
             }
-            Mock -CommandName 'Get-SpectreEscapedText' -Verifiable
             $panel = Get-PreviewPanel @getPreviewPanelSplat
-            #global:Get-RenderedText -panel $panel -renderOptions $renderOptions -containerWidth 100 |
-            #    Should -BeLike 'Passed'
-            Should -Invoke Get-SpectreEscapedText -Exactly 1 -Scope It
+            global:Get-RenderedText -panel $panel -renderOptions $script:renderOptions -containerWidth $script:ContainerWidth |
+                Should -BeLike '*$true | Should -Be $true*'
         }
     }
 }

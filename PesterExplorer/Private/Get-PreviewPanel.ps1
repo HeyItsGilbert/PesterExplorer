@@ -129,7 +129,7 @@ function Get-PreviewPanel {
             Get-SpectreEscapedText |
             Format-SpectrePanel @formatSpectrePanelSplat
     } else {
-        Write-Debug "Selected item is a Pester object: $($object.Name)"
+        Write-Debug "Selected item '$($object.Name)'is a Pester object: $($object.GetType().Name)"
         $data = Format-PesterTreeHash -Object $object
         Write-Debug $($data|ConvertTo-Json -Depth 10)
         $formatSpectrePanelSplat = @{
@@ -151,7 +151,6 @@ function Get-PreviewPanel {
         $results += $object.StandardOutput |
             Get-SpectreEscapedText |
             Format-SpectrePanel @formatSpectrePanelSplat
-
     }
 
     # Print errors if they exist.
@@ -200,13 +199,13 @@ function Get-PreviewPanel {
             # If the scroll position is not zero, add a "back" item
             $reducedList += "[grey]...[/]"
         }
-        for ($i = $scrollPosition; $i -le $array.Count; $i++) {
+        for ($i = $scrollPosition; $i -lt $results.Count; $i++) {
             $itemHeight = Get-SpectreRenderableSize $results[$i]
             $totalHeight += $itemHeight.Height
             if ($totalHeight -gt $PreviewHeight) {
                 if($i -eq $scrollPosition) {
                     # If the first item already exceeds the height, stop here
-                    Write-Debug "First item exceeds preview height. Stopping."
+                    Write-Debug "First item exceeds preview height. Stopping. Total Height: $totalHeight, Preview Height: $PreviewHeight"
                     $reducedList += ":police_car_light:The next item is too large to display! Please resize your terminal.:police_car_light:" |
                         Format-SpectreAligned -HorizontalAlignment Center -VerticalAlignment Middle |
                         Format-SpectrePanel -Header ":police_car_light: [red]Warning[/]" -Color 'red' -Border Double
@@ -214,7 +213,7 @@ function Get-PreviewPanel {
                 }
                 # If the total height exceeds the preview height, stop adding items
                 Write-Debug "Total height exceeded preview height. Stopping at item $i."
-                $reducedList += "[blue]...more.[/] [grey]Switch to Panel and scroll with keys.[/]"
+                $reducedList += "[blue]...more. Switch to Panel and scroll with keys.[/]"
                 break
             }
             $reducedList += $results[$i]
