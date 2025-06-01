@@ -6,7 +6,7 @@ A TUI to explore Pester results.
 
 [![PowerShell Gallery](https://img.shields.io/powershellgallery/dt/PesterExplorer)](https://www.powershellgallery.com/packages/PesterExplorer/)
 [![PowerShell Gallery Version](https://img.shields.io/powershellgallery/v/PesterExplorer)](https://www.powershellgallery.com/packages/PesterExplorer/)
-[![GitHub Workflow Status](https://img.shields.io/github/actions/workflow/status/HeyItsGilbert/PesterExplorer/CI.yaml)](https://www.powershellgallery.com/packages/PesterExplorer/)
+[![GitHub Workflow Status](https://img.shields.io/github/actions/workflow/status/HeyItsGilbert/PesterExplorer/Publish.yaml)](https://www.powershellgallery.com/packages/PesterExplorer/)
 [![PowerShell Gallery](https://img.shields.io/powershellgallery/p/PesterExplorer)](https://www.powershellgallery.com/packages/PesterExplorer/)
 
 ## Overview
