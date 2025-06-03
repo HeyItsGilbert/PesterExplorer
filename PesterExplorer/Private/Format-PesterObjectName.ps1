@@ -61,7 +61,7 @@ function Format-PesterObjectName {
             'Passed' { 'green' }
             'Failed' { 'red' }
             'Skipped' { 'yellow' }
-            'Inconclusive' { 'orange' }
+            'Inconclusive' { 'darkorange' }
             default { 'white' }
         }
         $finalName = if ($NoColor) {

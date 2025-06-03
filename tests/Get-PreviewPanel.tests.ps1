@@ -15,13 +15,6 @@ Describe 'Get-PreviewPanel' {
         InModuleScope $env:BHProjectName {
             $script:ContainerWidth = 80
             $script:ContainerHeight = 200
-            $size = [Spectre.Console.Size]::new($containerWidth, $containerHeight)
-            $script:renderOptions = [Spectre.Console.Rendering.RenderOptions]::new(
-                [Spectre.Console.AnsiConsole]::Console.Profile.Capabilities,
-                $size
-            )
-            $script:renderOptions.Justification = $null
-            $script:renderOptions.Height = $null
             $container = New-PesterContainer -Scriptblock {
                 Describe 'Demo Tests' {
                     Context 'Contextualize It' {
@@ -69,7 +62,7 @@ Describe 'Get-PreviewPanel' {
                 PreviewWidth = $script:ContainerWidth
             }
             $panel = Get-PreviewPanel @getPreviewPanelSplat
-            global:Get-RenderedText -panel $panel -renderOptions $script:renderOptions -containerWidth $script:ContainerWidth |
+            global:Get-RenderedText -Panel $panel |
                 Should -BeLike "*Please select an item.*"
         }
     }
@@ -78,11 +71,6 @@ Describe 'Get-PreviewPanel' {
         InModuleScope $env:BHProjectName {
             $Items = Get-ListFromObject -Object $script:run.Containers[0].Blocks[0].Order[0]
             $height = 5
-            $size = [Spectre.Console.Size]::new(80, $height)
-            $renderOptions = [Spectre.Console.Rendering.RenderOptions]::new(
-                [Spectre.Console.AnsiConsole]::Console.Profile.Capabilities,
-                $size
-            )
             $getPreviewPanelSplat = @{
                 Items = $Items
                 SelectedItem = 'Test1'
@@ -91,7 +79,7 @@ Describe 'Get-PreviewPanel' {
                 PreviewWidth = $script:ContainerWidth
             }
             $panel = Get-PreviewPanel @getPreviewPanelSplat
-            global:Get-RenderedText -panel $panel -renderOptions $renderOptions -containerWidth $script:ContainerWidth |
+            global:Get-RenderedText -Panel $panel |
                 Should -BeLike "*resize your terminal*"
         }
     }
@@ -106,7 +94,7 @@ Describe 'Get-PreviewPanel' {
                 PreviewWidth = $script:ContainerWidth
             }
             $panel = Get-PreviewPanel @getPreviewPanelSplat
-            global:Get-RenderedText -panel $panel -renderOptions $script:renderOptions -containerWidth $script:ContainerWidth |
+            global:Get-RenderedText -panel $panel |
                 Should -BeLike '*$true | Should -Be $true*'
         }
     }
