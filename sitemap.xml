@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+    <url>
+         <loc>http://heyitsgilbert.github.io/PesterExplorer/</loc>
+         <lastmod>2025-06-03</lastmod>
+         <changefreq>daily</changefreq>
+    </url>
+    <url>
+         <loc>http://heyitsgilbert.github.io/PesterExplorer/en-US/Show-PesterResult/</loc>
+         <lastmod>2025-06-03</lastmod>
+         <changefreq>daily</changefreq>
+    </url>
+    <url>
+         <loc>http://heyitsgilbert.github.io/PesterExplorer/en-US/Show-PesterResultTree/</loc>
+         <lastmod>2025-06-03</lastmod>
+         <changefreq>daily</changefreq>
+    </url>
+    <url>
+         <loc>http://heyitsgilbert.github.io/PesterExplorer/en-US/about_PesterExplorer.help/</loc>
+         <lastmod>2025-06-03</lastmod>
+         <changefreq>daily</changefreq>
+    </url>
+</urlset>
