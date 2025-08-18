@@ -259,3 +259,42 @@ If bootstrap or build fails:
 
 ### Shared Workflows
 The project uses shared workflows from `HeyItsGilbert/.github` repository, which handle the actual build and test logic.
+
+## Quick Reference
+
+### Essential Commands (Work Offline)
+```powershell
+# Validate all PowerShell syntax
+Get-ChildItem -Path . -Filter '*.ps1' -Recurse | ForEach-Object {
+    [System.Management.Automation.PSParser]::Tokenize((Get-Content $_.FullName -Raw), [ref]$null)
+}
+
+# Run code analysis  
+Invoke-ScriptAnalyzer -Path ./PesterExplorer/ -Recurse -Severity Warning,Error
+
+# Create test Pester result
+$pesterResult = Invoke-Pester ./tests/fixtures/Example.ps1 -PassThru -Output None
+
+# Check module structure
+Get-ChildItem ./PesterExplorer/Public/*.ps1, ./PesterExplorer/Private/*.ps1
+```
+
+### Commands Requiring Network Access
+```powershell
+# Setup and bootstrap (2-5 minutes)
+Register-PSRepository -Default
+.\build.ps1 -Task Init -Bootstrap
+
+# Build and test (5-10 minutes)  
+.\build.ps1
+
+# Install dependencies manually
+Install-Module PwshSpectreConsole -Scope CurrentUser
+```
+
+### File Locations
+- Main module: `./PesterExplorer/PesterExplorer.psd1`
+- Public functions: `./PesterExplorer/Public/`
+- Tests: `./tests/`
+- Build script: `./build.ps1`
+- Dependencies: `./requirements.psd1`
