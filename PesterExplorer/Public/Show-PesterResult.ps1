@@ -79,6 +79,7 @@ function Show-PesterResult {
         $object = $PesterResult
         $selectedPane = 'list'
         $scrollPosition = 0
+        $listScrollPosition = 0
         #endregion Initial State
 
         while ($true) {
@@ -86,7 +87,9 @@ function Show-PesterResult {
             $sizes = $layout | Get-SpectreLayoutSizes
             $previewHeight = $sizes["preview"].Height
             $previewWidth = $sizes["preview"].Width
+            $listHeight = $sizes["list"].Height
             Write-Debug "Preview size: $previewWidth x $previewHeight"
+            Write-Debug "List height: $listHeight"
 
             # Handle input
             $lastKeyPressed = Get-LastKeyPressed
@@ -96,25 +99,68 @@ function Show-PesterResult {
                     if ($lastKeyPressed.Key -in @("j", "DownArrow")) {
                         $selectedItem = $list[($list.IndexOf($selectedItem) + 1) % $list.Count]
                         $scrollPosition = 0
+                        # Update list scroll position to keep selected item visible
+                        $selectedIndex = $list.IndexOf($selectedItem)
+                        if ($listHeight -gt 0 -and $list.Count -gt $listHeight) {
+                            # If selected item is below visible area, scroll down
+                            if ($selectedIndex -ge ($listScrollPosition + $listHeight - 1)) {
+                                $listScrollPosition = $selectedIndex - $listHeight + 2
+                            }
+                            # If selected item is above visible area, scroll up  
+                            elseif ($selectedIndex -lt $listScrollPosition) {
+                                $listScrollPosition = $selectedIndex
+                            }
+                            # Ensure scroll position is within bounds
+                            $listScrollPosition = [Math]::Max(0, [Math]::Min($listScrollPosition, $list.Count - $listHeight))
+                        }
                     } elseif ($lastKeyPressed.Key -in @("k", "UpArrow")) {
                         $selectedItem = $list[($list.IndexOf($selectedItem) - 1 + $list.Count) % $list.Count]
                         $scrollPosition = 0
+                        # Update list scroll position to keep selected item visible
+                        $selectedIndex = $list.IndexOf($selectedItem)
+                        if ($listHeight -gt 0 -and $list.Count -gt $listHeight) {
+                            # If selected item is above visible area, scroll up
+                            if ($selectedIndex -lt $listScrollPosition) {
+                                $listScrollPosition = $selectedIndex
+                            }
+                            # If selected item is below visible area, scroll down
+                            elseif ($selectedIndex -ge ($listScrollPosition + $listHeight - 1)) {
+                                $listScrollPosition = $selectedIndex - $listHeight + 2
+                            }
+                            # Ensure scroll position is within bounds
+                            $listScrollPosition = [Math]::Max(0, [Math]::Min($listScrollPosition, $list.Count - $listHeight))
+                        }
                     } elseif ($lastKeyPressed.Key -eq "PageDown") {
                         $currentIndex = $list.IndexOf($selectedItem)
                         $newIndex = [Math]::Min($currentIndex + 10, $list.Count - 1)
                         $selectedItem = $list[$newIndex]
                         $scrollPosition = 0
+                        # Update list scroll position to keep selected item visible
+                        if ($listHeight -gt 0 -and $list.Count -gt $listHeight) {
+                            $listScrollPosition = [Math]::Max(0, [Math]::Min($newIndex - [Math]::Floor($listHeight / 2), $list.Count - $listHeight))
+                        }
                     } elseif ($lastKeyPressed.Key -eq "PageUp") {
                         $currentIndex = $list.IndexOf($selectedItem)
-                        $newIndex = [Math]::Max($currentIndex - 10, $list.Count - 1)
+                        $newIndex = [Math]::Max($currentIndex - 10, 0)
                         $selectedItem = $list[$newIndex]
                         $scrollPosition = 0
+                        # Update list scroll position to keep selected item visible
+                        if ($listHeight -gt 0 -and $list.Count -gt $listHeight) {
+                            $listScrollPosition = [Math]::Max(0, [Math]::Min($newIndex - [Math]::Floor($listHeight / 2), $list.Count - $listHeight))
+                        }
                     } elseif ($lastKeyPressed.Key -eq "Home") {
                         $selectedItem = $list[0]
                         $scrollPosition = 0
+                        $listScrollPosition = 0
                     } elseif ($lastKeyPressed.Key -eq "End") {
                         $selectedItem = $list[-1]
                         $scrollPosition = 0
+                        # Scroll to bottom to show last item
+                        if ($listHeight -gt 0 -and $list.Count -gt $listHeight) {
+                            $listScrollPosition = $list.Count - $listHeight
+                        } else {
+                            $listScrollPosition = 0
+                        }
                     } elseif ($lastKeyPressed.Key -in @("Tab", "RightArrow", "l")) {
                         $selectedPane = 'preview'
                     } elseif ($lastKeyPressed.Key -eq "Enter") {
@@ -135,6 +181,7 @@ function Show-PesterResult {
                         $list = [array]$items.Keys
                         $selectedItem = $list[0]
                         $scrollPosition = 0
+                        $listScrollPosition = 0
                     } elseif ($lastKeyPressed.Key -eq "Escape") {
                         # Move up via Esc key
                         if($stack.Count -eq 0) {
@@ -146,6 +193,7 @@ function Show-PesterResult {
                         $list = [array]$items.Keys
                         $selectedItem = $list[0]
                         $scrollPosition = 0
+                        $listScrollPosition = 0
                     }
                 }
                 else {
@@ -175,6 +223,8 @@ function Show-PesterResult {
                 List = $list
                 SelectedItem = $selectedItem
                 SelectedPane = $selectedPane
+                ListScrollPosition = $listScrollPosition
+                ListHeight = $listHeight
             }
             $listPanel = Get-ListPanel @getListPanelSplat
 
