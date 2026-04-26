@@ -79,6 +79,7 @@ function Show-PesterResult {
         $object = $PesterResult
         $selectedPane = 'list'
         $scrollPosition = 0
+        $listScrollOffset = 0
         #endregion Initial State
 
         while ($true) {
@@ -86,6 +87,7 @@ function Show-PesterResult {
             $sizes = $layout | Get-SpectreLayoutSizes
             $previewHeight = $sizes["preview"].Height
             $previewWidth = $sizes["preview"].Width
+            $listHeight = $sizes["list"].Height
             Write-Debug "Preview size: $previewWidth x $previewHeight"
 
             # Handle input
@@ -106,7 +108,7 @@ function Show-PesterResult {
                         $scrollPosition = 0
                     } elseif ($lastKeyPressed.Key -eq "PageUp") {
                         $currentIndex = $list.IndexOf($selectedItem)
-                        $newIndex = [Math]::Max($currentIndex - 10, $list.Count - 1)
+                        $newIndex = [Math]::Max($currentIndex - 10, 0)
                         $selectedItem = $list[$newIndex]
                         $scrollPosition = 0
                     } elseif ($lastKeyPressed.Key -eq "Home") {
@@ -135,6 +137,7 @@ function Show-PesterResult {
                         $list = [array]$items.Keys
                         $selectedItem = $list[0]
                         $scrollPosition = 0
+                        $listScrollOffset = 0
                     } elseif ($lastKeyPressed.Key -eq "Escape") {
                         # Move up via Esc key
                         if($stack.Count -eq 0) {
@@ -146,7 +149,17 @@ function Show-PesterResult {
                         $list = [array]$items.Keys
                         $selectedItem = $list[0]
                         $scrollPosition = 0
+                        $listScrollOffset = 0
                     }
+                    # Ensure the selected item is always within the visible viewport
+                    $selectedIndex = $list.IndexOf($selectedItem)
+                    $visibleCount = if ($listHeight -gt 4) { $listHeight - 4 } else { $list.Count }
+                    if ($selectedIndex -lt $listScrollOffset) {
+                        $listScrollOffset = $selectedIndex
+                    } elseif ($selectedIndex -ge ($listScrollOffset + $visibleCount)) {
+                        $listScrollOffset = $selectedIndex - $visibleCount + 1
+                    }
+                    if ($listScrollOffset -lt 0) { $listScrollOffset = 0 }
                 }
                 else {
                     #region Preview Navigation
@@ -175,6 +188,8 @@ function Show-PesterResult {
                 List = $list
                 SelectedItem = $selectedItem
                 SelectedPane = $selectedPane
+                ScrollOffset = $listScrollOffset
+                ListHeight = $listHeight
             }
             $listPanel = Get-ListPanel @getListPanelSplat
 

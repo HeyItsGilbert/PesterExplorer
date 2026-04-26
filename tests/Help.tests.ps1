@@ -108,7 +108,7 @@ Describe "Test help for <_.Name>" -ForEach $commands {
 
         # Shouldn't find extra parameters in help.
         It "finds help parameter in code: <_>" {
-            $_ -in $parameterNames | Should -Be $true
+            $_ -in $commandParameterNames | Should -Be $true
         }
     }
 }
