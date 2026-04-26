@@ -30,7 +30,9 @@ function Get-ListPanel {
         $List,
         [string]
         $SelectedItem,
-        [string]$SelectedPane = "list"
+        [string]$SelectedPane = "list",
+        [int]$ScrollOffset = 0,
+        [int]$ListHeight = 0
     )
     $paneColor = if($SelectedPane -ne "list") {
         # If the selected pane is not preview, return an empty panel
@@ -44,7 +46,19 @@ function Get-ListPanel {
         StemColor      = [Spectre.Console.Color]::Grey
         LeafColor      = [Spectre.Console.Color]::White
     }
-    $results = $List | ForEach-Object {
+    # Calculate the visible window. Panel borders and potential ellipsis rows consume 4 rows.
+    $visibleCount = if ($ListHeight -gt 4) { $ListHeight - 4 } else { $List.Count }
+    $startIndex = [Math]::Max(0, [Math]::Min($ScrollOffset, $List.Count - 1))
+    $endIndex = [Math]::Min($startIndex + $visibleCount - 1, $List.Count - 1)
+    $showEllipsisTop = $startIndex -gt 0
+    $showEllipsisBottom = $endIndex -lt ($List.Count - 1)
+    $visibleList = if ($List.Count -gt 0) { @($List[$startIndex..$endIndex]) } else { @() }
+
+    $results = @()
+    if ($showEllipsisTop) {
+        $results += Write-SpectreHost "[grey]...[/]" -PassThru | Format-SpectrePadded -Padding 0
+    }
+    $results += $visibleList | ForEach-Object {
         $name = $_
         if($name -eq '..') {
             # This is a parent item, so we show it as a folder
@@ -86,6 +100,9 @@ function Get-ListPanel {
                     Format-SpectrePadded -Padding 0
             }
         }
+    }
+    if ($showEllipsisBottom) {
+        $results += Write-SpectreHost "[grey]...[/]" -PassThru | Format-SpectrePadded -Padding 0
     }
     $results |
         Format-SpectreRows |
