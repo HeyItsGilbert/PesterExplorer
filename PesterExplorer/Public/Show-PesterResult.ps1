@@ -122,7 +122,7 @@ function Show-PesterResult {
                         if($items.Item($selectedItem).GetType().Name -eq "Test") {
                             # This is a test. We don't want to go deeper.
                         }
-                        if($selectedItem -like '*..*') {
+                        if($selectedItem -eq '..') {
                             # Move up one via selecting ..
                             $object = $stack.Pop()
                             Write-Debug "Popped item from stack: $($object.Name)"

@@ -67,6 +67,21 @@ Describe 'Get-PreviewPanel' {
         }
     }
 
+    It 'should preview a test whose name ends with ".."' {
+        InModuleScope $env:BHProjectName {
+            $test = $script:run.Containers[0].Blocks[0].Order[0].Order[0]
+            $getPreviewPanelSplat = @{
+                Items = [ordered]@{ '..' = @(); 'waits for retry...' = $test }
+                SelectedItem = 'waits for retry...'
+                PreviewHeight = $script:ContainerHeight
+                PreviewWidth = $script:ContainerWidth
+            }
+            $panel = Get-PreviewPanel @getPreviewPanelSplat
+            global:Get-RenderedText -Panel $panel |
+                Should -Not -BeLike "*Please select an item.*"
+        }
+    }
+
     It 'should print warning when the screen is too small' {
         InModuleScope $env:BHProjectName {
             $Items = Get-ListFromObject -Object $script:run.Containers[0].Blocks[0].Order[0]

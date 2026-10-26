@@ -71,7 +71,7 @@ function Get-PreviewPanel {
     } else {
         "white"
     }
-    if($SelectedItem -like "*..") {
+    if($SelectedItem -eq '..') {
         $formatSpectreAlignedSplat = @{
             HorizontalAlignment = 'Center'
             VerticalAlignment = 'Middle'
